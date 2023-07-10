@@ -555,7 +555,7 @@ void CMotionMatchingView::DrawObjects(void)
 {
 	CMotionMatchingDoc* pDoc = GetDocument();
 
-	//pDoc->MotionMatching->draw(pDoc->m_framenum);
+	pDoc->MotionMatching->draw(pDoc->m_framenum);
 
 	pDoc->trajectory->drawTrajectory();
 

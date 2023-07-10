@@ -8,9 +8,8 @@ MySkeleton::MySkeleton(void)
 	numJoints = 38;            //없애야 함
 	m_numofActivatedJoint = 0;
 	filename = "LocomotionFlat01_000.bvh";
-	rootcolor = Vector3f(0, 0, 0);
 	m_height = 0.0f; 
-	distance = 0.0f;
+
 }
 MySkeleton::~MySkeleton(void)
 {
@@ -111,7 +110,7 @@ void MySkeleton::readHierachyFile() {
 	}
 	
 }
-void MySkeleton::draw(Vector3f c, int lineWidth, bool bSphere, bool m_bShowSrcMotionRootOnly, bool m_bShowDstMotionRootOnly,Vector3f goalPos)
+void MySkeleton::draw(Vector3f c, int lineWidth, bool bSphere, bool m_bShowSrcMotionRootOnly, bool m_bShowDstMotionRootOnly,float distance)
 {
 	if (bSphere == false)
 		glDisable(GL_LIGHTING);
@@ -119,16 +118,28 @@ void MySkeleton::draw(Vector3f c, int lineWidth, bool bSphere, bool m_bShowSrcMo
 	if (m_bShowDstMotionRootOnly == true) {
 		root->setGlobalTransform();
 		Vector3f p = root->globalPos;
+		
+		float thresh = .5f;
+		float height = getHeight();
 
-		if (distance > 5) {
+		float err = distance;
+		err /= height;
+		err *= 1.8;
+
+		float h = (0.6 - err / thresh * 0.6);
+		h = (h > 0) ? h : 0;
+/*
+		if (distance > 7) {
 			rootcolor = HSV2RGB(Vector3f(0.0, 1, 1)); // 빨간색
 		}
-		else if (distance > 2) {
+		else if (distance > 3) {
 			rootcolor = HSV2RGB(Vector3f(0.3, 1, 1)); // 초록색
 		}
 		else {
 			rootcolor = HSV2RGB(Vector3f(0.6, 1, 1)); // 파란색
 		}
+*/
+		rootcolor = HSV2RGB(Vector3f(h, 1, 1));
 
 		glColor3f(rootcolor.x, rootcolor.y, rootcolor.z);
 		glPushMatrix();

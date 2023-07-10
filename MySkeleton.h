@@ -28,10 +28,8 @@ public:
 	Vector3f rootpos;
 	Vector3f rootcolor;
 
-	float m_distance;
-
 	void init();
-	void draw(Vector3f c = Vector3f(-1,-1,-1), int lineWidth = 0, bool bSphere = true, bool m_bShowSrcMotionRootOnly = false, bool m_bShowDstMotionRootOnly = false,Vector3f goalPos = Vector3f(-1,-1,-1));
+	void draw(Vector3f c = Vector3f(-1,-1,-1), int lineWidth = 0, bool bSphere = true, bool m_bShowSrcMotionRootOnly = false, bool m_bShowDstMotionRootOnly = false,float distance =0.0f);
 	void readHierachyFile();
 	void setPosture(const MyPosture& p);
 

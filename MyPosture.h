@@ -31,7 +31,7 @@ public:
 	Vector3f rootPosXZ;
 	Vector3f rootPosDxz;
 
-	Vector3f goalPos;
+	float m_distance;
 
 	void drawGL(MySkeleton* pSkeleton, Vector3f color = Vector3f(1,1,1), bool bSphere = true, bool m_bShowSrcMotionRootOnly = false, bool m_bShowDstMotionRootOnly = false, Vector3f goalPos = Vector3f(-1,-1,-1));
 

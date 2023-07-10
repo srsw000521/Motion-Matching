@@ -93,12 +93,11 @@ void MyPosture::drawGL(MySkeleton* pSkeleton, Vector3f color, bool bSphere, bool
 {
 	pSkeleton->setPosture(*this);
 
-	pSkeleton->root->setGlobalTransform();
+	/*pSkeleton->root->setGlobalTransform();
 	Vector3f pos = pSkeleton->root->globalPos;
 	pSkeleton->m_distance = goalPos.Distance(Vector3f(pos.x, 0, pos.z));
-
-	printf("       %f\n", pSkeleton->m_distance);
-	pSkeleton->draw(color, 1, bSphere, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly, goalPos);
+	*/
+	pSkeleton->draw(color, 1, bSphere, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly, m_distance);
 }
 
 void MyPosture::setDifference(MyPosture& from, MyPosture& to)

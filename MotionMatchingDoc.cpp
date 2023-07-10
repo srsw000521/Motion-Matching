@@ -203,7 +203,7 @@ void CMotionMatchingDoc::OnMotionmatchingDoexperiment()
 		err /= height;
 		err *= 1.8;
 		forwardFrame();
-		printf("frame %d \n", i);
+//		printf("frame %d \n", i);
 		fprintf(file, "%lf\n", err);
 	}
 

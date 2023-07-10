@@ -221,7 +221,6 @@ void Motion::readMotionFile() {
 
 	Vector3f *jointAngleArray = new Vector3f[activated_joint];
 	Vector3f rootPos;
-	Vector3f rootPosDT;
 
 	if (!file) {
 		printf("none");
@@ -260,7 +259,6 @@ void Motion::readMotionFile() {
 					if (flag_root == 0) {
 						rootposition[frame_cnt] = Vector3f(ang_a, ang_b, ang_c);    //
 						rootPos = Vector3f(ang_a, ang_b, ang_c);
-						rootPosDT = Vector3f(0, 0, 0);
 						flag_root = 1;
 					}
 					else {
@@ -315,6 +313,6 @@ void Motion::drawMotionGL(int numDrawingFrame, int stFrame, int edFrame, bool m_
 	{
 		MyPosture& p = postures[i];
 		Vector3f c = Vector3f(0,float(i) / postures.size(), 1 - float(i) / postures.size());
-		p.drawGL(m_pSkeleton, c, false, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly, goalPos);
+		p.drawGL(m_pSkeleton, c, false, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly);
 	}
 }

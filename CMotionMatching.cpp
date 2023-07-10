@@ -87,7 +87,6 @@ double CMotionMatching::computeCurrentCost(int candidateIndex)
 	double w9 = 10.0;
 	double w10 = 10.0;
 
-	
 
 	cost += w1 * (srcMotion.m_features[m_currentIndex].m_hipVel - srcMotion.m_features[candidateIndex].m_hipVel).Length2();
 	cost += w2 * (srcMotion.m_features[m_currentIndex].m_LFootPos - srcMotion.m_features[candidateIndex].m_LFootPos).Length2();
@@ -127,6 +126,7 @@ double CMotionMatching::computeFutureCost(int candidateIndex)
 
 	double w1 = 1.0;
 	double w2 = 0.1;
+	//double w2 = 0.0;
 
 	double gamma = 0.7;
 
@@ -189,7 +189,8 @@ double CMotionMatching::computeErr()
 
 	double curErr = (currentPosition - currentGoal).Length2();
 	//printf("curErr : %lf  curretPos: %f %f goal Pos: %f %f \n", curErr, currentPosition.x, currentPosition.z, currentGoal.x, currentGoal.z);
-	printf("curErr : %lf\n", curErr);
+//	printf("curErr : %lf\n", curErr);
+	dstMotion.postures[lastFrame].m_distance = sqrt(curErr);
 /*
 	positionErr += curErr;
 	if (trajectory->m_goalIndex == 0 ) {
@@ -219,7 +220,7 @@ void CMotionMatching::drawFuturePos() {
 		glPopMatrix();
 	}
 
-	for (int i = 0; i < srcMotion.m_numPastStep; i++)
+	/*for (int i = 0; i < srcMotion.m_numPastStep; i++)
 	{
 		Vector3f pos = p.rootPosition + rotate(q, srcMotion.m_features[m_currentIndex].m_posPast[i]);
 		glPushMatrix();
@@ -228,7 +229,7 @@ void CMotionMatching::drawFuturePos() {
 		gluSphere(obj, 0.5f, 20, 20);
 
 		glPopMatrix();
-	}
+	}*/
 
 
 	gluDeleteQuadric(obj);
@@ -242,6 +243,10 @@ void CMotionMatching::draw(int framenum, bool bPlay)
 	dstMotion.m_pSkeleton->setPosture(p);
 
 	dstMotion.m_pSkeleton->draw();
+	/*MyPosture& p1 = srcMotion.postures[framenum];
+	srcMotion.m_pSkeleton->setPosture(p1);
+	srcMotion.m_pSkeleton->draw();*/
+
 
 	computeErr();
 

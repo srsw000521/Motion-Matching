@@ -4,10 +4,10 @@
 MotionFeatured::MotionFeatured()
 {
 	m_features = nullptr;
-	m_futureStep = 25;
-	m_numStep = 4;
+	m_futureStep = 20;
+	m_numStep = 3;
 	m_pastStep = m_futureStep;
-	m_numPastStep = 0;
+	m_numPastStep = 1;
 }
 
 MotionFeatured::~MotionFeatured()
@@ -180,7 +180,6 @@ void MotionFeatured::initFeature()
 
 		}
 	}
-
 
 	delete[] hipPos;
 }
