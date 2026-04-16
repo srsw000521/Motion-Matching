@@ -9,6 +9,12 @@
 
 #include <GL/freeglut.h>
 
+class MyJoint;
+class MySkeleton;
+class MyPosture;
+class Motion;
+class Trajectory;
+class CMotionMatching;
 
 class CMotionMatchingView : public CView
 {
@@ -90,6 +96,20 @@ public:
 #endif
 
 protected:
+
+private:
+	void RenderJoint(MyJoint* joint, Vector3f color, int lineWidth);
+	void RenderJointShadow(MyJoint* joint, Vector3f color, int lineWidth);
+	void RenderSkeleton(MySkeleton* skel, Vector3f color, int lineWidth, bool bSphere,
+	                    bool srcOnly, bool dstOnly, float distance);
+	void RenderPosture(MyPosture* posture, MySkeleton* skel, Vector3f color,
+	                   bool bSphere, bool srcOnly, bool dstOnly);
+	void RenderMotion(Motion* motion, int numFrames, int stFrame, int edFrame,
+	                  bool srcOnly, bool dstOnly);
+	void RenderTrajectoryPath(Trajectory* traj);
+	void RenderTrajectoryCurrentGoal(Trajectory* traj);
+	void RenderTrajectoryFutureGoal(Trajectory* traj, int dframe);
+	void RenderFuturePositions(CMotionMatching* mm);
 
 // 생성된 메시지 맵 함수
 protected:

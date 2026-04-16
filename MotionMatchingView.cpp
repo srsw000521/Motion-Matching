@@ -854,5 +854,231 @@ void CMotionMatchingView::OnViewShowDstMotion()
 	Invalidate();
 }
 
+// ---------------------------------------------------------------------------
+// Render* helpers — GL logic extracted from data classes (Commit 1).
+// DrawObjects still calls the old draw methods; these are not yet wired up.
+// ---------------------------------------------------------------------------
 
+void CMotionMatchingView::RenderJoint(MyJoint* joint, Vector3f color, int lineWidth)
+{
+	glPushMatrix();
+
+	if (lineWidth < 1)
+		glLineWidth(5.0f);
+	else
+		glLineWidth(lineWidth);
+
+	glBegin(GL_LINES);
+
+	Vector3f c = joint->color;
+	if (color.x >= 0.0f)
+		c = color;
+
+	if (joint->parent != nullptr) {
+		glColor3f(c.x, c.y, c.z);
+		glVertex3f(0, 0, 0);
+		glVertex3f(joint->localPos.x, joint->localPos.y, joint->localPos.z);
+	}
+
+	glEnd();
+
+	glTranslatef(joint->localPos.x, joint->localPos.y, joint->localPos.z);
+
+	Vector3f rot = ln(joint->localRot);
+	rot = rot / 3.141592f * 180.0f * 2.0f;
+	float leng = sqrt(rot % rot);
+	if (leng > 0.0001f)
+	{
+		rot = rot / leng;
+		glRotatef(leng, rot.x, rot.y, rot.z);
+	}
+
+	glPushMatrix();
+	glPopMatrix();
+
+	if (joint->child != nullptr)
+		RenderJoint(joint->child, color, lineWidth);
+
+	glPopMatrix();
+
+	if (joint->sibling != nullptr)
+		RenderJoint(joint->sibling, color, lineWidth);
+}
+
+void CMotionMatchingView::RenderJointShadow(MyJoint* joint, Vector3f color, int lineWidth)
+{
+	glPushMatrix();
+
+	if (lineWidth < 1)
+		glLineWidth(5.0f);
+	else
+		glLineWidth(lineWidth);
+
+	if (joint->parent != nullptr)
+	{
+		glBegin(GL_LINES);
+		glColor3f(color.x, color.y, color.z);
+		glVertex3f(joint->shadowPos.x, joint->shadowPos.y, joint->shadowPos.z);
+		glVertex3f(joint->parent->shadowPos.x, joint->parent->shadowPos.y, joint->parent->shadowPos.z);
+		glEnd();
+	}
+
+	glPopMatrix();
+
+	if (joint->child != nullptr)   RenderJointShadow(joint->child, color, lineWidth);
+	if (joint->sibling != nullptr) RenderJointShadow(joint->sibling, color, lineWidth);
+}
+
+void CMotionMatchingView::RenderSkeleton(MySkeleton* skel, Vector3f color, int lineWidth,
+                                          bool bSphere, bool srcOnly, bool dstOnly, float distance)
+{
+	if (!bSphere)
+		glDisable(GL_LIGHTING);
+
+	if (dstOnly)
+	{
+		skel->root->setGlobalTransform();
+		Vector3f p = skel->root->globalPos;
+
+		float height = skel->getHeight();
+		float err = (height > 0.0f) ? (distance / height * 1.8f) : 0.0f;
+		float h = 0.6f - err / 0.5f * 0.6f;
+		if (h < 0.0f) h = 0.0f;
+
+		skel->rootcolor = HSV2RGB(Vector3f(h, 1, 1));
+
+		glColor3f(skel->rootcolor.x, skel->rootcolor.y, skel->rootcolor.z);
+		glPushMatrix();
+		glTranslatef(p.x, 0, p.z);
+		GLUquadricObj* obj = gluNewQuadric();
+		gluQuadricDrawStyle(obj, GLU_FILL);
+		gluSphere(obj, 0.3f, 20, 20);
+		gluDeleteQuadric(obj);
+		glPopMatrix();
+		return;
+	}
+
+	if (srcOnly)
+	{
+		skel->root->setGlobalTransform();
+		Vector3f p = skel->root->globalPos;
+		glColor3f(color.x, color.y, color.z);
+		glPushMatrix();
+		glTranslatef(p.x, 0, p.z);
+		GLUquadricObj* obj = gluNewQuadric();
+		gluQuadricDrawStyle(obj, GLU_FILL);
+		gluSphere(obj, 0.3f, 20, 20);
+		gluDeleteQuadric(obj);
+		glPopMatrix();
+		return;
+	}
+
+	RenderJoint(skel->root, color, lineWidth);
+	skel->root->setGlobalTransform();
+	RenderJointShadow(skel->root, Vector3f(0.3f, 0.3f, 0.3f), lineWidth);
+
+	if (bSphere)
+	{
+		for (int i = 0; i < skel->numJoints; i++)
+		{
+			Vector3f p = skel->joints[i]->globalPos;
+			glPushMatrix();
+			glTranslatef(p.x, p.y, p.z);
+			GLUquadricObj* obj = gluNewQuadric();
+			gluQuadricDrawStyle(obj, GLU_FILL);
+			glColor3f(skel->joints[i]->color.x, skel->joints[i]->color.y, skel->joints[i]->color.z);
+			gluSphere(obj, 0.3f, 20, 20);
+			gluDeleteQuadric(obj);
+			glPopMatrix();
+		}
+	}
+}
+
+void CMotionMatchingView::RenderPosture(MyPosture* posture, MySkeleton* skel, Vector3f color,
+                                         bool bSphere, bool srcOnly, bool dstOnly)
+{
+	skel->setPosture(*posture);
+	RenderSkeleton(skel, color, 1, bSphere, srcOnly, dstOnly, posture->m_distance);
+}
+
+void CMotionMatchingView::RenderMotion(Motion* motion, int numFrames, int stFrame, int edFrame,
+                                        bool srcOnly, bool dstOnly)
+{
+	if (motion->m_pSkeleton == nullptr) return;
+	if (motion->postures.size() == 0) return;
+
+	if (stFrame < 1) stFrame = 0;
+	if (edFrame < 1) edFrame = (int)motion->postures.size();
+	if (stFrame > edFrame) stFrame = edFrame;
+
+	if (numFrames < 1) numFrames = edFrame;
+	int step = (edFrame - stFrame) / numFrames;
+	if (step < 1) step = 1;
+
+	for (int i = stFrame; i < edFrame; i += step)
+	{
+		MyPosture& p = motion->postures[i];
+		Vector3f c = Vector3f(0, float(i) / motion->postures.size(), 1 - float(i) / motion->postures.size());
+		RenderPosture(&p, motion->m_pSkeleton, c, false, srcOnly, dstOnly);
+	}
+}
+
+void CMotionMatchingView::RenderTrajectoryPath(Trajectory* traj)
+{
+	glLineWidth(10.0f);
+	glBegin(GL_LINE_STRIP);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	for (int i = 0; i < traj->m_numSample; i++)
+		glVertex3f(traj->m_trajectory[i].x, traj->m_trajectory[i].y, traj->m_trajectory[i].z);
+	glEnd();
+}
+
+void CMotionMatchingView::RenderTrajectoryCurrentGoal(Trajectory* traj)
+{
+	Vector3f p = traj->getPositionAt(traj->m_goalIndex);
+	glPushMatrix();
+	glTranslatef(p.x, p.y, p.z);
+	GLUquadricObj* obj = gluNewQuadric();
+	gluQuadricDrawStyle(obj, GLU_FILL);
+	glColor3f(1, 0, 0);
+	gluSphere(obj, 0.7f, 20, 20);
+	gluDeleteQuadric(obj);
+	glPopMatrix();
+}
+
+void CMotionMatchingView::RenderTrajectoryFutureGoal(Trajectory* traj, int dframe)
+{
+	Vector3f p = traj->getFuturePosition(dframe);
+	glPushMatrix();
+	glTranslatef(p.x, p.y, p.z);
+	GLUquadricObj* obj = gluNewQuadric();
+	gluQuadricDrawStyle(obj, GLU_FILL);
+	glColor3f(1, 0, 0);
+	gluSphere(obj, 0.5f, 20, 20);
+	gluDeleteQuadric(obj);
+	glPopMatrix();
+}
+
+void CMotionMatchingView::RenderFuturePositions(CMotionMatching* mm)
+{
+	if (mm->dstMotion.postures.size() == 0) return;
+
+	GLUquadricObj* obj = gluNewQuadric();
+	gluQuadricDrawStyle(obj, GLU_FILL);
+
+	MyPosture& p = mm->dstMotion.postures.back();
+	Quat q = p.rootOriY;
+
+	for (int i = 0; i < mm->srcMotion.m_numStep; i++)
+	{
+		Vector3f pos = p.rootPosition + rotate(q, mm->srcMotion.m_features[mm->m_currentIndex].m_posFuture[i]);
+		glPushMatrix();
+		glTranslatef(pos.x, 0, pos.z);
+		glColor3f(0, 1, 0);
+		gluSphere(obj, 0.5f, 20, 20);
+		glPopMatrix();
+	}
+
+	gluDeleteQuadric(obj);
+}
 
