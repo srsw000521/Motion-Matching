@@ -554,31 +554,55 @@ void CMotionMatchingView::DrawSettingLight(void)
 void CMotionMatchingView::DrawObjects(void)
 {
 	CMotionMatchingDoc* pDoc = GetDocument();
+	CMotionMatching* mm = pDoc->MotionMatching;
 
-	pDoc->MotionMatching->draw(pDoc->m_framenum);
-
-	pDoc->trajectory->drawTrajectory();
-
-	pDoc->MotionMatching->draw(pDoc->m_currentTime + m_dFrame, m_bPlay);
-
-	Vector3f goalPos = pDoc->trajectory->getCurrentGoalPosition();
-	if (m_bShowDstMotion)
-		pDoc->MotionMatching->dstMotion.drawMotionGL(-1,-1,-1, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly, goalPos);
-
-	if (m_bShowSrcMotion)
+	// replaces: mm->draw(pDoc->m_framenum)
+	if (mm->dstMotion.postures.size() > 0)
 	{
-		if (m_Show1000Frame > pDoc->MotionMatching->srcMotion.numof_frame / 1000)
-			m_Show1000Frame = 0;
-		if (m_Show1000Frame == 0)
-			pDoc->MotionMatching->srcMotion.drawMotionGL(-1,-1,-1, m_bShowSrcMotionRootOnly);
-		else
-			pDoc->MotionMatching->srcMotion.drawMotionGL(500, (m_Show1000Frame - 1) * 1000, m_Show1000Frame * 1000);
-
+		int framenum = pDoc->m_framenum;
+		if (framenum > (int)mm->dstMotion.postures.size() - 1)
+			framenum = (int)mm->dstMotion.postures.size() - 1;
+		mm->dstMotion.m_pSkeleton->setPosture(mm->dstMotion.postures[framenum]);
+		RenderSkeleton(mm->dstMotion.m_pSkeleton, Vector3f(-1,-1,-1), 0, true, false, false, 0.0f);
+		mm->computeErr();
+		RenderTrajectoryCurrentGoal(pDoc->trajectory);
+		for (int i = 0; i < mm->srcMotion.m_numStep; i++)
+			RenderTrajectoryFutureGoal(pDoc->trajectory, mm->srcMotion.m_futureStep * (i + 1));
+		RenderFuturePositions(mm);
 	}
 
-	//if (m_bShowSrcMotion) pDoc->MotionMatching->srcMotion.drawMotionGL(100, 100);
-	//if (m_bShowDstMotion) pDoc->MotionMatching->dstMotion.drawMotionGL(100);
-	
+	// replaces: pDoc->trajectory->drawTrajectory()
+	RenderTrajectoryPath(pDoc->trajectory);
+
+	// replaces: mm->draw(pDoc->m_currentTime + m_dFrame, m_bPlay)
+	if (mm->dstMotion.postures.size() > 0)
+	{
+		int framenum = pDoc->m_currentTime + m_dFrame;
+		if (framenum > (int)mm->dstMotion.postures.size() - 1)
+			framenum = (int)mm->dstMotion.postures.size() - 1;
+		mm->dstMotion.m_pSkeleton->setPosture(mm->dstMotion.postures[framenum]);
+		RenderSkeleton(mm->dstMotion.m_pSkeleton, Vector3f(-1,-1,-1), 0, true, false, false, 0.0f);
+		mm->computeErr();
+		RenderTrajectoryCurrentGoal(pDoc->trajectory);
+		for (int i = 0; i < mm->srcMotion.m_numStep; i++)
+			RenderTrajectoryFutureGoal(pDoc->trajectory, mm->srcMotion.m_futureStep * (i + 1));
+		RenderFuturePositions(mm);
+	}
+
+	// replaces: mm->dstMotion.drawMotionGL(-1,-1,-1, srcOnly, dstOnly, goalPos)
+	if (m_bShowDstMotion)
+		RenderMotion(&mm->dstMotion, -1, -1, -1, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly);
+
+	// replaces: mm->srcMotion.drawMotionGL(...)
+	if (m_bShowSrcMotion)
+	{
+		if (m_Show1000Frame > mm->srcMotion.numof_frame / 1000)
+			m_Show1000Frame = 0;
+		if (m_Show1000Frame == 0)
+			RenderMotion(&mm->srcMotion, -1, -1, -1, m_bShowSrcMotionRootOnly, false);
+		else
+			RenderMotion(&mm->srcMotion, 500, (m_Show1000Frame - 1) * 1000, m_Show1000Frame * 1000, false, false);
+	}
 }
 
 void CMotionMatchingView::OnLButtonDown(UINT nFlags, CPoint point)
