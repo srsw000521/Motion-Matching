@@ -48,10 +48,14 @@ qt_add_executable(MotionMatchingQt
 target_compile_definitions(MotionMatchingQt PRIVATE
     # Suppress MSVC warnings for fopen/strtok/etc in core files
     _CRT_SECURE_NO_WARNINGS
-    # Required when linking against the static freeglut lib (no DLL present).
-    # freeglut.lib is at the project root; MotionGLWidget will include GL headers
-    # in Qt Commit 3 — the define must be in place before then.
+    # FREEGLUT_STATIC keeps FGAPI empty (not __declspec(dllimport)) so
+    # freeglut function declarations are plain C linkage.
     FREEGLUT_STATIC
+    # Suppress freeglut_std.h's automatic #pragma comment(lib, "freeglut_static.lib").
+    # MotionGLWidget.cpp includes <GL/freeglut.h> only for gl*/glu* declarations;
+    # no glut* functions are called, so the freeglut binary is not needed.
+    # All required symbols are resolved by opengl32 and glu32 below.
+    FREEGLUT_LIB_PRAGMAS=0
 )
 
 target_include_directories(MotionMatchingQt PRIVATE
@@ -64,14 +68,10 @@ target_include_directories(MotionMatchingQt PRIVATE
 target_link_libraries(MotionMatchingQt PRIVATE
     Qt6::Widgets
     Qt6::OpenGLWidgets
-    # Windows system OpenGL libraries
+    # Windows system OpenGL libraries — provide all gl* and glu* symbols used
+    # by MotionGLWidget. freeglut binary is not linked (see FREEGLUT_LIB_PRAGMAS=0).
     opengl32
     glu32
-    # Static freeglut — only one .lib found at project root.
-    # Assumed x64; replace with the correct path if building x86.
-    # Not strictly needed until Qt Commit 3 (MotionGLWidget), but
-    # resolving the path here keeps the CMakeLists stable across commits.
-    ${CMAKE_SOURCE_DIR}/freeglut.lib
 )
 
 # Run the executable from the project root so relative BVH file paths

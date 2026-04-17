@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget* parent)
     // This mirrors CMotionMatchingDoc::OnNewDocument().
     m_state.init();
 
-    setCentralWidget(new MotionGLWidget(this));
+    setCentralWidget(new MotionGLWidget(&m_state, this));
 
     setWindowTitle("Motion Matching");
     resize(1024, 768);
