@@ -26,6 +26,7 @@ public:
     bool isPlaying()          const { return m_bPlay; }
     bool isShowingSrcMotion() const { return m_bShowSrcMotion; }
     bool isShowingDstMotion() const { return m_bShowDstMotion; }
+    bool isPerspective()      const { return m_bPerspective; }
 
 public slots:
     // Simple toggles wired to menu actions.
@@ -34,8 +35,9 @@ public slots:
     void togglePlay();
     void toggleShowSrcMotion();
     void toggleShowDstMotion();
-    void changeTrajectory();  // cycles trajectory mode 0→1→2→0; matches MFC OnMotionmatchingChangetrajectory
-    void resetPlayback();     // resets MotionState + m_dFrame; no direct MFC counterpart
+    void changeTrajectory();   // cycles trajectory mode 0→1→2→0; matches MFC OnMotionmatchingChangetrajectory
+    void resetPlayback();      // resets MotionState + m_dFrame; no direct MFC counterpart
+    void toggleProjection();   // EXPERIMENTAL: switches between orthographic (default) and perspective
 
 private slots:
     void onTick();
@@ -55,7 +57,8 @@ private:
     QTimer       m_timer;
     bool         m_bPlay = true;
     int          m_dFrame = 0;         // frame offset for pause-step; mirrors MFC m_dFrame
-    int          m_trajectoryMode = 0; // cycles 0-1-2; mirrors MFC CMotionMatchingView::m_trajectoryMode
+    int          m_trajectoryMode = 0;  // cycles 0-1-2; mirrors MFC CMotionMatchingView::m_trajectoryMode
+    bool         m_bPerspective   = false; // EXPERIMENTAL — false = orthographic (default/MFC-parity)
     QPoint       m_lastMousePos;
 
     // -----------------------------------------------------------------------

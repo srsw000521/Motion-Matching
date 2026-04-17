@@ -26,6 +26,7 @@ private:
     QAction* m_actShowDst          = nullptr;
     QAction* m_actChangeTrajectory = nullptr;
     QAction* m_actReset            = nullptr;
+    QAction* m_actPerspective      = nullptr; // EXPERIMENTAL
 
     void createMenus();
 };

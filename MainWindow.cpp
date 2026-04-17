@@ -49,6 +49,12 @@ void MainWindow::createMenus()
     m_actShowDst->setCheckable(true);
     connect(m_actShowDst, &QAction::triggered, m_glWidget, &MotionGLWidget::toggleShowDstMotion);
 
+    viewMenu->addSeparator();
+
+    m_actPerspective = viewMenu->addAction(tr("Perspective (Experimental)"));
+    m_actPerspective->setCheckable(true);
+    connect(m_actPerspective, &QAction::triggered, m_glWidget, &MotionGLWidget::toggleProjection);
+
     connect(viewMenu, &QMenu::aboutToShow, this, &MainWindow::syncViewMenu);
 
     // ------------------------------------------------------------------
@@ -74,4 +80,5 @@ void MainWindow::syncViewMenu()
 {
     m_actShowSrc->setChecked(m_glWidget->isShowingSrcMotion());
     m_actShowDst->setChecked(m_glWidget->isShowingDstMotion());
+    m_actPerspective->setChecked(m_glWidget->isPerspective());
 }

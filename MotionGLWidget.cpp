@@ -60,6 +60,7 @@ void MotionGLWidget::onTick()
 void MotionGLWidget::togglePlay()          { m_bPlay          = !m_bPlay;          update(); }
 void MotionGLWidget::toggleShowSrcMotion() { m_bShowSrcMotion = !m_bShowSrcMotion; update(); }
 void MotionGLWidget::toggleShowDstMotion() { m_bShowDstMotion = !m_bShowDstMotion; update(); }
+void MotionGLWidget::toggleProjection()    { m_bPerspective   = !m_bPerspective;   update(); }
 
 void MotionGLWidget::changeTrajectory()
 {
@@ -190,11 +191,23 @@ void MotionGLWidget::DrawScene()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (m_Size < 0.0f) m_Size = 0.0f;
-    glOrtho(-m_Size, m_Size, -m_Size / m_Aspect, m_Size / m_Aspect, m_Near, m_Far);
+    if (m_bPerspective)
+    {
+        // EXPERIMENTAL: gluPerspective with camera pulled back by m_Size*6 so
+        // wheel-zoom still narrows/widens the view in a useful way.
+        // near = m_Size*0.1 keeps the near plane scaled with zoom level.
+        gluPerspective(45.0, m_Aspect, m_Size * 0.1f, m_Size * 200.0f);
+    }
+    else
+    {
+        glOrtho(-m_Size, m_Size, -m_Size / m_Aspect, m_Size / m_Aspect, m_Near, m_Far);
+    }
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -20.0f);
+    // In perspective mode the camera must be physically behind the scene;
+    // in ortho mode -20 is sufficient (z has no foreshortening effect).
+    glTranslatef(0.0f, 0.0f, m_bPerspective ? -(m_Size * 6.0f) : -20.0f);
 
     DrawSettingLight();
 
