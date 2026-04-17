@@ -1,4 +1,4 @@
-#include "pch.h"
+#include <cassert>
 #include "MyPosture.h"
 
 MyPosture::MyPosture(int numjoint, Vector3f _rootPos, Vector3f* _jointArray)
@@ -43,9 +43,9 @@ MyPosture::~MyPosture()
 
 void MyPosture::clone(const MyPosture& in)
 {
-	ASSERT(m_numJoint == in.m_numJoint);
-	ASSERT(Ori != nullptr);
-	ASSERT(jointAngles != nullptr);
+	assert(m_numJoint == in.m_numJoint);
+	assert(Ori != nullptr);
+	assert(jointAngles != nullptr);
 
 	rootPosition = in.rootPosition;
 	rootOriDy = in.rootOriDy;

@@ -1,4 +1,5 @@
-#include "pch.h"
+#include <cassert>
+#include <cstdio>
 #include "ImPCA.h"
 
 #include "LinearAlgebra.h"
@@ -64,7 +65,7 @@ void ImPCA::BuildPCA(int dim, int num_sample, float** featureVector, float accur
 	int i, j, k;
 
 	m_Accuracy = accuracy;
-	ASSERT(m_Accuracy > 0.0f && m_Accuracy < 1.0f);
+	assert(m_Accuracy > 0.0f && m_Accuracy < 1.0f);
 	m_DimOriginal = dim;
 
 	MemoryAssign();
@@ -171,11 +172,11 @@ void ImPCA::BuildPCA(int dim, int num_sample, float** featureVector, float accur
 			break;
 	}
 
-	TRACE("EV: NumEFFFrame %d  NumDim %d: NumRed %d\n", num_sample, m_DimOriginal, m_DimReduced);
+	printf("EV: NumEFFFrame %d  NumDim %d: NumRed %d\n", num_sample, m_DimOriginal, m_DimReduced);
 
 	for (i = 0; i < m_DimOriginal; i++)
-		TRACE("%10.8f ", pEigenValue[i]);
-	TRACE("\n");
+		printf("%10.8f ", pEigenValue[i]);
+	printf("\n");
 
 	delete[] pFeature;
 	delete[] diag;
@@ -219,7 +220,7 @@ void ImPCA::LoadPCA(FILE* file)
 	{
 		int ind;
 		fscanf_s(file, "%d ", &ind);
-		ASSERT(ind == i);
+		assert(ind == i);
 		fscanf_s(file, "%f ", &pEigenValue[i]);
 		for (j = 0; j < m_DimOriginal; j++)
 		{
