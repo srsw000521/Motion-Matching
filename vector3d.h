@@ -380,12 +380,6 @@ public:
 		z = z*d + from.z;
 	};
 
-	friend Vector3d<float> interpolate( float t, Vector3d<float> const& a, Vector3d<float> const& b )
-	{
-		return a*(1.0f-t) + b*t;
-	};
-
-
 	bool BinaryEqual(const Vector3d<float> &p) const
 	{
 		const int *source = (const int *) &x;
@@ -819,63 +813,6 @@ public:
 		}
 	}
 
-	friend float DistanceFromLine( const Vector3d<float> & in, const Vector3d<float> & a, const Vector3d<float> & b)		// distance from point in to line(a,b)
-	{
-		float dist = 0.0f;
-
-		Vector3d<float> p = b-a;
-
-		float l = p.Length();
-		p.Normalize();
-		float u = p % (in-a);
-		if(u<0) 
-			return (in-a).Length();
-		if(u>l)
-			return (in-b).Length();
-	
-		
-		p = p*u + a;
-		
-		return (in-p).Length();
-	};
-
-	friend float DistanceFromLine( const Vector3d<float> & in, const Vector3d<float> & a, const Vector3d<float> & b, Vector3d<float> & closest)		// distance from point in to line(a,b)
-	{
-		float dist = 0.0f;
-
-		Vector3d<float> p = b-a;
-
-		float l = p.Length();
-
-		if(l>0.001f)
-		{
-			p.Normalize();
-			float u = p % (in-a);
-			if(u<0) 
-			{
-				closest = a;
-				return (in-a).Length();
-			}
-			if(u>l)
-			{
-				closest = b;
-				return (in-b).Length();
-			}
-			
-			p = p*u + a;
-			closest = p;
-
-			return (in-p).Length();
-		}
-		else
-		{
-			closest = a;
-			return(in-a).Length();
-		}
-
-	};
-	
-
 	// Given a point and a plane (defined by three points), compute the closest point
 	// in the plane.  (The plane is unbounded.)
 	void NearestPointInPlane(const Vector3d<Type> &point,
@@ -1002,51 +939,109 @@ public:
 	}
 
 
-	friend Vector3d<float> HSV2RGB(Vector3d<float> hsv)
-	{
-		Vector3d<float> rgb;
-		if(hsv[1]>0.0) 
-		{
-			int i;
-			float f,p,q,t;
-			float h=hsv[0],s=hsv[1],v=hsv[2];
-			h*=6.0f;
-			i = int(floor(h));
-			f = h-i;
-			p = v*(1-s);
-			q = v*(1-(s*f));
-			t = v*(1-s*(1-f));
-			switch(i)
-			{
-				case 0:
-					rgb[0]=v, rgb[1]=t, rgb[2]=p;
-					break;
-				case 1:
-					rgb[0]=q, rgb[1]=v, rgb[2]=p;
-					break;
-				case 2:
-					rgb[0]=p, rgb[1]=v, rgb[2]=t;
-					break;
-				case 3:
-					rgb[0]=p, rgb[1]=q, rgb[2]=v;
-					break;
-				case 4:
-					rgb[0]=t, rgb[1]=p, rgb[2]=v;
-					break;
-				case 5:
-					rgb[0]=v, rgb[1]=p, rgb[2]=q;
-			}
-		}
-		return rgb;
-
-	};
-
 //private:
 
 	Type x;
 	Type y;
 	Type z;
 };
+
+inline Vector3d<float> interpolate( float t, Vector3d<float> const& a, Vector3d<float> const& b )
+{
+	return a*(1.0f-t) + b*t;
+}
+
+inline float DistanceFromLine( const Vector3d<float> & in, const Vector3d<float> & a, const Vector3d<float> & b)		// distance from point in to line(a,b)
+{
+	float dist = 0.0f;
+
+	Vector3d<float> p = b-a;
+
+	float l = p.Length();
+	p.Normalize();
+	float u = p % (in-a);
+	if(u<0)
+		return (in-a).Length();
+	if(u>l)
+		return (in-b).Length();
+
+	p = p*u + a;
+
+	return (in-p).Length();
+}
+
+inline float DistanceFromLine( const Vector3d<float> & in, const Vector3d<float> & a, const Vector3d<float> & b, Vector3d<float> & closest)		// distance from point in to line(a,b)
+{
+	float dist = 0.0f;
+
+	Vector3d<float> p = b-a;
+
+	float l = p.Length();
+
+	if(l>0.001f)
+	{
+		p.Normalize();
+		float u = p % (in-a);
+		if(u<0)
+		{
+			closest = a;
+			return (in-a).Length();
+		}
+		if(u>l)
+		{
+			closest = b;
+			return (in-b).Length();
+		}
+
+		p = p*u + a;
+		closest = p;
+
+		return (in-p).Length();
+	}
+	else
+	{
+		closest = a;
+		return(in-a).Length();
+	}
+}
+
+inline Vector3d<float> HSV2RGB(Vector3d<float> hsv)
+{
+	Vector3d<float> rgb;
+	if(hsv[1]>0.0)
+	{
+		int i;
+		float f,p,q,t;
+		float h=hsv[0],s=hsv[1],v=hsv[2];
+		h*=6.0f;
+		i = int(floor(h));
+		f = h-i;
+		p = v*(1-s);
+		q = v*(1-(s*f));
+		t = v*(1-s*(1-f));
+		switch(i)
+		{
+			case 0:
+				rgb[0]=v, rgb[1]=t, rgb[2]=p;
+				break;
+			case 1:
+				rgb[0]=q, rgb[1]=v, rgb[2]=p;
+				break;
+			case 2:
+				rgb[0]=p, rgb[1]=v, rgb[2]=t;
+				break;
+			case 3:
+				rgb[0]=p, rgb[1]=q, rgb[2]=v;
+				break;
+			case 4:
+				rgb[0]=t, rgb[1]=p, rgb[2]=v;
+				break;
+			case 5:
+				rgb[0]=v, rgb[1]=p, rgb[2]=q;
+		}
+	}
+	return rgb;
+}
 
 
 template <class Type> class Vector2d
@@ -1193,7 +1188,7 @@ public:
 
 	void Zero(void)
 	{
-		x = y = z = 0;
+		x = y = 0;
 	};
 
 	Vector2d negative(void) const

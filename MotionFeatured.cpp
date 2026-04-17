@@ -76,11 +76,16 @@ void MotionFeatured::initFeature()
 
 		float dt = frame_time;
 		int prev_i = (i>0) ? i - 1 : i;
-		m_features[i].m_hipVel = rotate(inverseY, (hipPos[i] - hipPos[prev_i]) / dt);
-		m_features[i].m_RHandPos = rotate(inverseY, (rgHandPos - prev_rgHandPos) / dt);
-		m_features[i].m_LHandPos = rotate(inverseY, (lgHandPos - prev_lgHandPos) / dt);
-		m_features[i].m_RFootVel = rotate(inverseY, (rgFootPos - prev_rgFootPos) / dt);
-		m_features[i].m_LFootVel = rotate(inverseY, (lgFootPos - prev_lgFootPos) / dt);
+		Vector3f hipVelArg    = (hipPos[i] - hipPos[prev_i]) / dt;
+		Vector3f rHandVelArg  = (rgHandPos - prev_rgHandPos) / dt;
+		Vector3f lHandVelArg  = (lgHandPos - prev_lgHandPos) / dt;
+		Vector3f rFootVelArg  = (rgFootPos - prev_rgFootPos) / dt;
+		Vector3f lFootVelArg  = (lgFootPos - prev_lgFootPos) / dt;
+		m_features[i].m_hipVel   = rotate(inverseY, hipVelArg);
+		m_features[i].m_RHandPos = rotate(inverseY, rHandVelArg);
+		m_features[i].m_LHandPos = rotate(inverseY, lHandVelArg);
+		m_features[i].m_RFootVel = rotate(inverseY, rFootVelArg);
+		m_features[i].m_LFootVel = rotate(inverseY, lFootVelArg);
 
 		prev_lgHandPos = lgHandPos;
 		prev_rgHandPos = rgHandPos;

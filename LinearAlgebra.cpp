@@ -431,7 +431,7 @@ static float maxarg1,maxarg2;
 		  (maxarg1) : (maxarg2))
 #define SIGN(a,b) ((b) >= 0.0 ? fabs(a) : -fabs(a))
 
-void ntrerror(char *s)
+void ntrerror(const char *s)
 {
   printf("%s\n",s);
   exit(1);
