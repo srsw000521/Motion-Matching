@@ -1,4 +1,5 @@
-#include "pch.h"
+#include <cstdio>
+#include <cmath>
 #include "Trajectory.h"
 
 Trajectory::Trajectory()

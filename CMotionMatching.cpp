@@ -1,4 +1,7 @@
-#include "pch.h"
+#include <cstdio>
+#include <cfloat>
+#include <cmath>
+#include <vector>
 #include "CMotionMatching.h"
 
 CMotionMatching::CMotionMatching()

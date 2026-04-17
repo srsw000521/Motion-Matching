@@ -1,6 +1,7 @@
-#include "pch.h"
 //#include "stdafx.h"
-#include <math.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
 //#include <nrutil.h>
 #include "LinearAlgebra.h"
 //#include "primitives.h"

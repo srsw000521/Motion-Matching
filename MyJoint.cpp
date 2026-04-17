@@ -1,4 +1,5 @@
-#include "pch.h"
+#include <iostream>
+#include <string>
 #include "MyJoint.h"
 
 MyJoint::MyJoint(void)

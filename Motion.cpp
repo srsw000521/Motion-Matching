@@ -1,4 +1,7 @@
-#include "pch.h"
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
 #include "Motion.h"
 Motion::Motion()
 {

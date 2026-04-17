@@ -1,4 +1,4 @@
-#include "pch.h"
+#include <cassert>
 #include "MotionFeatured.h"
 
 MotionFeatured::MotionFeatured()
