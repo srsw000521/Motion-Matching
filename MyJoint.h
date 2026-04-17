@@ -33,8 +33,6 @@ public:
 	MyJoint* getByName(std::string in);
 
 	void setGlobalTransform(Vector3f parentoffset = Vector3f(0, 0, 0), Quat parentRot = Quat(0, 0, 0, 1));
-	void draw(Vector3f _c, int lineWidth);
-	void drawShadow(Vector3f _c, int lineWidth);
 	//void drawFeature();
 	
 	void printGlobalPos();

@@ -149,52 +149,6 @@ void Trajectory::setTriTrajectory()
 }
 
 
-void Trajectory::drawTrajectory()
-{
-
-	glLineWidth(10.0f);
-	glBegin(GL_LINE_STRIP);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	for (int i = 0; i < m_numSample; i++)
-	{
-		glVertex3f(m_trajectory[i].x, m_trajectory[i].y, m_trajectory[i].z);
-	}
-	glEnd();
-
-}
-
-void Trajectory::drawCurrentGoal()
-{
-
-	Vector3f p = getPositionAt(m_goalIndex);
-	glPushMatrix();
-	glTranslatef(p.x, p.y, p.z);
-	GLUquadricObj* obj;
-	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_FILL);
-
-	glColor3f(1, 0, 0);
-	gluSphere(obj, 0.7f, 20, 20);
-	gluDeleteQuadric(obj);
-
-	glPopMatrix();
-}
-void Trajectory::drawFutureGoal(int dframe)
-{
-
-	Vector3f p = getFuturePosition(dframe);
-	glPushMatrix();
-	glTranslatef(p.x, p.y, p.z);
-	GLUquadricObj* obj;
-	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_FILL);
-
-	glColor3f(1, 0, 0);
-	gluSphere(obj, 0.5f, 20, 20);
-	gluDeleteQuadric(obj);
-
-	glPopMatrix();
-}
 
 
 void Trajectory::setCurrentTime(int currentFrame)

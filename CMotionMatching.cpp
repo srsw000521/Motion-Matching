@@ -201,63 +201,6 @@ double CMotionMatching::computeErr()
 */
 	return sqrt(curErr);
 }
-void CMotionMatching::drawFuturePos() {
-	//draw future pos
-	GLUquadricObj* obj;
-	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_FILL);
-	MyPosture& p = dstMotion.postures.back();
-	Quat q = p.rootOriY;
-
-	for (int i = 0; i < srcMotion.m_numStep; i++)
-	{
-		Vector3f pos = p.rootPosition + rotate(q, srcMotion.m_features[m_currentIndex].m_posFuture[i]);
-		glPushMatrix();
-		glTranslatef(pos.x, 0, pos.z);
-		glColor3f(0, 1, 0);
-		gluSphere(obj, 0.5f, 20, 20);
-
-		glPopMatrix();
-	}
-
-	/*for (int i = 0; i < srcMotion.m_numPastStep; i++)
-	{
-		Vector3f pos = p.rootPosition + rotate(q, srcMotion.m_features[m_currentIndex].m_posPast[i]);
-		glPushMatrix();
-		glTranslatef(pos.x, 0, pos.z);
-		glColor3f(0, 0, 1);
-		gluSphere(obj, 0.5f, 20, 20);
-
-		glPopMatrix();
-	}*/
-
-
-	gluDeleteQuadric(obj);
-}
-void CMotionMatching::draw(int framenum, bool bPlay)
-{
-	if (dstMotion.postures.size() == 0) return;
-	if (framenum > dstMotion.postures.size() - 1) framenum = dstMotion.postures.size() - 1;
-
-	MyPosture& p = dstMotion.postures[framenum];
-	dstMotion.m_pSkeleton->setPosture(p);
-
-	dstMotion.m_pSkeleton->draw();
-	/*MyPosture& p1 = srcMotion.postures[framenum];
-	srcMotion.m_pSkeleton->setPosture(p1);
-	srcMotion.m_pSkeleton->draw();*/
-
-
-	computeErr();
-
-	trajectory->drawCurrentGoal();
-	for(int i = 0; i<srcMotion.m_numStep; i++)
-		trajectory->drawFutureGoal(srcMotion.m_futureStep*(i+1));
-
-	drawFuturePos();
-
-}
-
 void CMotionMatching::testSetup()
 {
 	for (int i = 0; i < 200; i+=2)

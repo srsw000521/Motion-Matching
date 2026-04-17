@@ -89,17 +89,6 @@ const MyPosture& MyPosture::operator= (const MyPosture& in)
 #include <GL/freeglut.h>
 #include "MySkeleton.h"
 
-void MyPosture::drawGL(MySkeleton* pSkeleton, Vector3f color, bool bSphere, bool m_bShowSrcMotionRootOnly, bool m_bShowDstMotionRootOnly, Vector3f goalPos)
-{
-	pSkeleton->setPosture(*this);
-
-	/*pSkeleton->root->setGlobalTransform();
-	Vector3f pos = pSkeleton->root->globalPos;
-	pSkeleton->m_distance = goalPos.Distance(Vector3f(pos.x, 0, pos.z));
-	*/
-	pSkeleton->draw(color, 1, bSphere, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly, m_distance);
-}
-
 void MyPosture::setDifference(MyPosture& from, MyPosture& to)
 {
 //	MyPosture& from = MotionMatching->srcMotion.getPosture(previousIndex);

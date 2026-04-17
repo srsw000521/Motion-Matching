@@ -5,7 +5,7 @@ MySkeleton::MySkeleton(void)
 	root = nullptr;
 	joints = nullptr;
 	rootpos = Vector3f(0, 0, 0);
-	numJoints = 38;            //¾ø¾Ö¾ß ÇÔ
+	numJoints = 38;            //ï¿½ï¿½ï¿½Ö¾ï¿½ ï¿½ï¿½
 	m_numofActivatedJoint = 0;
 	filename = "LocomotionFlat01_000.bvh";
 	m_height = 0.0f; 
@@ -110,93 +110,6 @@ void MySkeleton::readHierachyFile() {
 	}
 	
 }
-void MySkeleton::draw(Vector3f c, int lineWidth, bool bSphere, bool m_bShowSrcMotionRootOnly, bool m_bShowDstMotionRootOnly,float distance)
-{
-	if (bSphere == false)
-		glDisable(GL_LIGHTING);
-
-	if (m_bShowDstMotionRootOnly == true) {
-		root->setGlobalTransform();
-		Vector3f p = root->globalPos;
-		
-		float thresh = .5f;
-		float height = getHeight();
-
-		float err = distance;
-		err /= height;
-		err *= 1.8;
-
-		float h = (0.6 - err / thresh * 0.6);
-		h = (h > 0) ? h : 0;
-/*
-		if (distance > 7) {
-			rootcolor = HSV2RGB(Vector3f(0.0, 1, 1)); // »¡°£»ö
-		}
-		else if (distance > 3) {
-			rootcolor = HSV2RGB(Vector3f(0.3, 1, 1)); // ÃÊ·Ï»ö
-		}
-		else {
-			rootcolor = HSV2RGB(Vector3f(0.6, 1, 1)); // ÆÄ¶õ»ö
-		}
-*/
-		rootcolor = HSV2RGB(Vector3f(h, 1, 1));
-
-		glColor3f(rootcolor.x, rootcolor.y, rootcolor.z);
-		glPushMatrix();
-		glTranslatef(p.x, 0, p.z);
-		GLUquadricObj* obj;
-		obj = gluNewQuadric();
-		gluQuadricDrawStyle(obj, GLU_FILL);
-
-		gluSphere(obj, 0.3f, 20, 20);
-		gluDeleteQuadric(obj);
-		glPopMatrix();
-
-		return; 
-	}
-	if (m_bShowSrcMotionRootOnly == true)
-	{
-		root->setGlobalTransform();
-		Vector3f p = root->globalPos;
-		glColor3f(c.x, c.y, c.z);
-		glPushMatrix();
-		glTranslatef(p.x, 0, p.z);
-		GLUquadricObj* obj;
-		obj = gluNewQuadric();
-		gluQuadricDrawStyle(obj, GLU_FILL);
-
-		gluSphere(obj, 0.3f, 20, 20);
-		gluDeleteQuadric(obj);
-		glPopMatrix();     
-
-		return;
-	}
-
-	root->draw(c, lineWidth);
-	root->setGlobalTransform();
-	root->drawShadow(Vector3f(0.3, 0.3, 0.3), lineWidth);
-
-	if (bSphere)
-	{
-		for (int i = 0; i < numJoints; i++)
-		{
-			Vector3f p = joints[i]->globalPos;
-			glPushMatrix();
-			glTranslatef(p.x, p.y, p.z);
-			GLUquadricObj* obj;
-			obj = gluNewQuadric();
-			gluQuadricDrawStyle(obj, GLU_FILL);
-
-			Vector3f c = joints[i]->color;
-			glColor3f(c.x, c.y, c.z);
-			gluSphere(obj, 0.3f, 20, 20);
-			gluDeleteQuadric(obj);
-
-			glPopMatrix();
-		}
-	}
-}
-
 #include "MyPosture.h"
 
 void MySkeleton::setPosture(const MyPosture& p)

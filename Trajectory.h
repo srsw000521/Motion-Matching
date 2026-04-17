@@ -22,10 +22,6 @@ public:
 	void setTriTrajectory();
 	void setStarTrajectory();
 
-	void drawTrajectory();
-	void drawCurrentGoal();
-	void drawFutureGoal(int dframe);
-
 	void setCurrentTime(int currentFrame = 0);
 	Vector3f getPositionAt(int frame);
 	Vector3f getFuturePosition(int df);

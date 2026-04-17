@@ -297,22 +297,3 @@ void Motion::readMotionFile() {
 
 }
 
-void Motion::drawMotionGL(int numDrawingFrame, int stFrame, int edFrame, bool m_bShowSrcMotionRootOnly, bool m_bShowDstMotionRootOnly, Vector3f goalPos)
-{
-	if (m_pSkeleton == nullptr) return;
-	if (postures.size() == 0) return;
-	if (stFrame < 1) stFrame = 0;
-	if (edFrame < 1) edFrame = postures.size();
-	if (stFrame > edFrame) stFrame = edFrame;
-	
-	if (numDrawingFrame < 1) numDrawingFrame = edFrame;
-	int step = (edFrame-stFrame) / numDrawingFrame;
-	if (step < 1) step = 1;
-
-	for (int i = stFrame; i < edFrame; i+=step)
-	{
-		MyPosture& p = postures[i];
-		Vector3f c = Vector3f(0,float(i) / postures.size(), 1 - float(i) / postures.size());
-		p.drawGL(m_pSkeleton, c, false, m_bShowSrcMotionRootOnly, m_bShowDstMotionRootOnly);
-	}
-}

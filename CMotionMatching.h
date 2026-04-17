@@ -38,8 +38,6 @@ public:
 	double poseErr;
 	double err;
 
-	void drawFuturePos();
-	void draw(int framenum, bool bPlay = true);
 	void testSetup();
 	void setStartPosition();
 

@@ -43,8 +43,6 @@ public:
 		return postures[frame];
 	};
 
-	void drawMotionGL(int numDrawingFrame = -1, int stFrame = -1, int edFrame = -1, bool m_bShowSrcMotionRootOnly = false, bool m_bShowDstMotionRootOnly = false, Vector3f goalPos = Vector3f(-1,-1,-1));
-
 	Vector3f* rootposition;
 
 	virtual void readMotionFile();
