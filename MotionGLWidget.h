@@ -22,6 +22,21 @@ public:
     explicit MotionGLWidget(MotionState* state, QWidget* parent = nullptr);
     ~MotionGLWidget() override = default;
 
+    // Read-only accessors — used by MainWindow to sync menu check states.
+    bool isPlaying()          const { return m_bPlay; }
+    bool isShowingSrcMotion() const { return m_bShowSrcMotion; }
+    bool isShowingDstMotion() const { return m_bShowDstMotion; }
+
+public slots:
+    // Simple toggles wired to menu actions.
+    // togglePlay() is a plain toggle (matches MFC OnControlPlay).
+    // Space key keeps its own pause-step logic via keyPressEvent.
+    void togglePlay();
+    void toggleShowSrcMotion();
+    void toggleShowDstMotion();
+    void changeTrajectory();  // cycles trajectory mode 0→1→2→0; matches MFC OnMotionmatchingChangetrajectory
+    void resetPlayback();     // resets MotionState + m_dFrame; no direct MFC counterpart
+
 private slots:
     void onTick();
 
@@ -39,7 +54,8 @@ private:
     MotionState* m_state = nullptr;
     QTimer       m_timer;
     bool         m_bPlay = true;
-    int          m_dFrame = 0;    // frame offset for pause-step; mirrors MFC m_dFrame
+    int          m_dFrame = 0;         // frame offset for pause-step; mirrors MFC m_dFrame
+    int          m_trajectoryMode = 0; // cycles 0-1-2; mirrors MFC CMotionMatchingView::m_trajectoryMode
     QPoint       m_lastMousePos;
 
     // -----------------------------------------------------------------------

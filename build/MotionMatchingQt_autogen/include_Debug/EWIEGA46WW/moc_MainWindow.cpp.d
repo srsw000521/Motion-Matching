@@ -189,6 +189,7 @@ C:/dev/Motion-Matching/build/MotionMatchingQt_autogen/include_Debug/EWIEGA46WW/m
   C:/Qt/6.11.0/msvc2022_64/include/QtCore/qversiontagging.h \
   C:/Qt/6.11.0/msvc2022_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.11.0/msvc2022_64/include/QtCore/qyieldcpu.h \
+  C:/Qt/6.11.0/msvc2022_64/include/QtGui/QAction \
   C:/Qt/6.11.0/msvc2022_64/include/QtGui/qaction.h \
   C:/Qt/6.11.0/msvc2022_64/include/QtGui/qbitmap.h \
   C:/Qt/6.11.0/msvc2022_64/include/QtGui/qbrush.h \

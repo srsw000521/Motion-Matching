@@ -197,6 +197,7 @@ C:/dev/Motion-Matching/MainWindow.h
  mdp:C:/Qt/6.11.0/msvc2022_64/include/QtCore/qversiontagging.h
  mdp:C:/Qt/6.11.0/msvc2022_64/include/QtCore/qxptype_traits.h
  mdp:C:/Qt/6.11.0/msvc2022_64/include/QtCore/qyieldcpu.h
+ mdp:C:/Qt/6.11.0/msvc2022_64/include/QtGui/QAction
  mdp:C:/Qt/6.11.0/msvc2022_64/include/QtGui/qaction.h
  mdp:C:/Qt/6.11.0/msvc2022_64/include/QtGui/qbitmap.h
  mdp:C:/Qt/6.11.0/msvc2022_64/include/QtGui/qbrush.h

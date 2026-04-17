@@ -57,6 +57,27 @@ void MotionGLWidget::onTick()
     }
 }
 
+void MotionGLWidget::togglePlay()          { m_bPlay          = !m_bPlay;          update(); }
+void MotionGLWidget::toggleShowSrcMotion() { m_bShowSrcMotion = !m_bShowSrcMotion; update(); }
+void MotionGLWidget::toggleShowDstMotion() { m_bShowDstMotion = !m_bShowDstMotion; update(); }
+
+void MotionGLWidget::changeTrajectory()
+{
+    // Mirrors CMotionMatchingView::OnMotionmatchingChangetrajectory() exactly.
+    m_trajectoryMode = (m_trajectoryMode + 1) % 3;
+    if (m_state && m_state->trajectory)
+        m_state->trajectory->initTrajectory(m_trajectoryMode);
+    update();
+}
+
+void MotionGLWidget::resetPlayback()
+{
+    if (m_state)
+        m_state->reset();
+    m_dFrame = 0;
+    update();
+}
+
 // ---------------------------------------------------------------------------
 // Camera input — Qt mouse / wheel handlers
 // ---------------------------------------------------------------------------
