@@ -3,7 +3,6 @@
 #include "quat.h"
 #include "MySkeleton.h"
 #include "MyPosture.h"
-#include <GL/freeglut.h>
 #include <utility>
 #include <string>
 #include <deque>

@@ -86,9 +86,6 @@ const MyPosture& MyPosture::operator= (const MyPosture& in)
 	return *this;
 }
 
-#include <GL/freeglut.h>
-#include "MySkeleton.h"
-
 void MyPosture::setDifference(MyPosture& from, MyPosture& to)
 {
 //	MyPosture& from = MotionMatching->srcMotion.getPosture(previousIndex);

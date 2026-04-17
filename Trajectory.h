@@ -2,7 +2,6 @@
 #include "Vector3d.h"
 #include "quat.h"
 
-#include <GL/freeglut.h>
 class Trajectory
 {
 

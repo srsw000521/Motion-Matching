@@ -5,7 +5,6 @@
 #include "MotionFeatured.h"
 #include "MySkeleton.h"
 #include "Trajectory.h"
-#include <GL/freeglut.h>
 #include <vector>
 
 class MyPosture;
