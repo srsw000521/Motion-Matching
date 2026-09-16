@@ -4,9 +4,11 @@ C++/OpenGL 기반 실시간 Motion Matching 보행 애니메이션 시스템. Fe
 
 **한국컴퓨터그래픽스학회(KCGS) 2023 구두 발표**
 
-<video src="./assets/motion_matching_demo.mp4" controls width="700">
-  실시간 Motion Matching 데모 — 사용자 입력 기반 보행 동작 생성
-</video>
+
+
+https://github.com/user-attachments/assets/80a767b2-f5c9-4435-b670-45dfa6c2616b
+
+
 
 ---
 
