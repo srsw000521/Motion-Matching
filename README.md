@@ -46,9 +46,6 @@ Feature 설계를 튜닝한 결과, mean trajectory error가 아래와 같이 �
 
 김수라, 박상일. 「보행 동작 생성을 위한 모션 매칭의 효과적인 특징 벡터 설정에 관한 연구」, *Journal of the Korea Computer Graphics Society*, 29(3), 2023. — 한국컴퓨터그래픽스학회 2023 학술대회 구두 발표.
 
-## Related Work
-
-이 프로젝트에서 발견한 "생성 기반이 아니라 검색 기반이라 in-database 상황에 제한된다"는 한계는, 이후 diffusion 기반 motion generation 연구인 [Environment-Aware Locomotion Synthesis](https://github.com/srsw000521/Environment-Aware-AMDM)로 이어졌습니다.
 
 ## Author
 
