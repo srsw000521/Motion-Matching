@@ -45,8 +45,3 @@ Feature 설계를 튜닝한 결과, mean trajectory error가 아래와 같이 �
 ## Publication
 
 김수라, 박상일. 「보행 동작 생성을 위한 모션 매칭의 효과적인 특징 벡터 설정에 관한 연구」, *Journal of the Korea Computer Graphics Society*, 29(3), 2023. — 한국컴퓨터그래픽스학회 2023 학술대회 구두 발표.
-
-
-## Author
-
-김수라 — [GitHub](https://github.com/srsw000521)
